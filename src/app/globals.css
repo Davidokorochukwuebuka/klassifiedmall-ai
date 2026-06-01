@@ -1,0 +1,89 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700;800&display=swap');
+
+@layer base {
+  body {
+    @apply font-body bg-surface-light text-gray-900 dark:bg-surface-dark dark:text-gray-100 antialiased;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-heading;
+  }
+}
+
+@layer components {
+  .glass {
+    @apply bg-white/10 backdrop-blur-xl border border-white/20 shadow-soft;
+  }
+  .glass-dark {
+    @apply bg-black/20 backdrop-blur-xl border border-white/10;
+  }
+  .btn-primary {
+    @apply bg-gradient-to-r from-secondary to-secondary-dark text-white font-semibold px-6 py-3 rounded-btn transition-all duration-200 hover:shadow-glow hover:scale-[1.02] active:scale-95;
+  }
+  .btn-secondary {
+    @apply bg-white/10 backdrop-blur border border-white/30 text-white font-semibold px-6 py-3 rounded-btn transition-all duration-200 hover:bg-white/20;
+  }
+  .btn-outline {
+    @apply border-2 border-primary text-primary font-semibold px-6 py-3 rounded-btn transition-all duration-200 hover:bg-primary hover:text-white hover:scale-[1.02] active:scale-95;
+  }
+  .hero-btn-primary {
+    @apply bg-gradient-to-r from-[#61CE70] to-[#10B981] text-white font-bold px-6 py-3.5 rounded-2xl shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300 text-sm sm:text-base;
+  }
+  .hero-btn-secondary {
+    @apply bg-white/10 backdrop-blur-md border border-white/30 text-white font-bold px-6 py-3.5 rounded-2xl hover:bg-white/20 transition-all duration-300 text-sm sm:text-base;
+  }
+  .hero-btn-accent {
+    @apply bg-gradient-to-r from-[#6EC1E4] to-[#3B82F6] text-white font-bold px-6 py-3.5 rounded-2xl shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300 text-sm sm:text-base;
+  }
+  .section-padding {
+    @apply px-4 sm:px-6 lg:px-8 py-16 sm:py-20 lg:py-24;
+  }
+  .input-field {
+    @apply px-4 py-3 rounded-btn border border-gray-300 dark:border-gray-600 dark:bg-gray-800 focus:outline-none focus:border-primary transition-colors;
+  }
+  .card-3d {
+    @apply rounded-2xl bg-white dark:bg-card-dark shadow-soft transition-all duration-300 hover:shadow-glow hover:-translate-y-1;
+    transform-style: preserve-3d;
+    perspective: 1000px;
+  }
+  .card-3d:hover {
+    transform: translateY(-4px) rotateX(2deg);
+  }
+  .neon-glow {
+    box-shadow: 0 0 15px rgba(110, 193, 228, 0.3), 0 0 30px rgba(97, 206, 112, 0.1);
+  }
+  .neon-glow-gold {
+    box-shadow: 0 0 15px rgba(212, 160, 23, 0.3), 0 0 30px rgba(212, 160, 23, 0.1);
+  }
+}
+
+@layer utilities {
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+  .text-glow {
+    text-shadow: 0 0 10px rgba(110, 193, 228, 0.5);
+  }
+  .safe-area-bottom {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+}
+
+/* Custom animations */
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.animate-shimmer {
+  background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.1) 50%, transparent 100%);
+  background-size: 200% 100%;
+  animation: shimmer 2s infinite;
+}
