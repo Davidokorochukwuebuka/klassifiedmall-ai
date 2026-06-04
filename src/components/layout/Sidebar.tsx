@@ -12,31 +12,75 @@ interface SidebarProps {
 }
 
 const navItems = [
-  { label: 'Dashboard', href: '/', icon: '📊' },
-  { label: 'Marketplace', href: '/marketplace', icon: '🌾' },
-  { label: 'Orders', href: '/orders', icon: '📦' },
-  { label: 'Community', href: '/community', icon: '👥' },
-  { label: 'Hailing', href: '/hailing', icon: '🚚' },
-  { label: 'Spaces', href: '/spaces', icon: '❄️' },
-  { label: 'Settings', href: '/settings', icon: '⚙️' },
+  { label: 'Dashboard', href: '/dashboard', icon: '📊' },
+  { label: 'Marketplace', href: '/dashboard/marketplace', icon: '🌾' },
+  { label: 'Orders', href: '/dashboard/orders', icon: '📦' },
+  { label: 'Community', href: '/dashboard/community', icon: '👥' },
+  { label: 'Hailing', href: '/dashboard/hailing', icon: '🚚' },
+  { label: 'Spaces', href: '/dashboard/spaces', icon: '❄️' },
+  { label: 'Settings', href: '/settings/profile', icon: '⚙️' },
 ];
 
 const accountSpecificItems: Record<string, { label: string; href: string; icon: string }[]> = {
   FARMER: [
-    { label: 'My Produce', href: '/marketplace', icon: '🌱' },
-    { label: 'Harvest Schedule', href: '/orders', icon: '📅' },
+    { label: 'My Produce', href: '/dashboard/marketplace', icon: '🌱' },
+    { label: 'Harvest Schedule', href: '/dashboard/orders', icon: '📅' },
+  ],
+  EXPORTER: [
+    { label: 'Export Docs', href: '/dashboard/orders', icon: '📄' },
+    { label: 'Shipments', href: '/dashboard/orders', icon: '🚢' },
   ],
   SUPPLIER: [
-    { label: 'Inventory', href: '/marketplace', icon: '📋' },
-    { label: 'Bulk Orders', href: '/orders', icon: '🏭' },
+    { label: 'Inventory', href: '/dashboard/marketplace', icon: '📋' },
+    { label: 'Bulk Orders', href: '/dashboard/orders', icon: '🏭' },
   ],
-  LOGISTICS_PROVIDER: [
-    { label: 'Fleet', href: '/hailing', icon: '🚛' },
-    { label: 'Routes', href: '/hailing', icon: '🗺️' },
+  DISTRIBUTOR: [
+    { label: 'Distribution', href: '/dashboard/orders', icon: '🔀' },
+    { label: 'Network', href: '/dashboard/community', icon: '🌐' },
+  ],
+  PROCESSOR: [
+    { label: 'Processing', href: '/dashboard/marketplace', icon: '⚙️' },
+    { label: 'Raw Materials', href: '/dashboard/orders', icon: '🧪' },
+  ],
+  STREET_KIOSK: [
+    { label: 'Kiosk Menu', href: '/dashboard/marketplace', icon: '🏪' },
+    { label: 'Daily Sales', href: '/dashboard/orders', icon: '💰' },
+  ],
+  SUPERMARKET: [
+    { label: 'Departments', href: '/dashboard/marketplace', icon: '🛍️' },
+    { label: 'Stock', href: '/dashboard/orders', icon: '📦' },
+  ],
+  DROPSHIPPER: [
+    { label: 'Linked Products', href: '/dashboard/marketplace', icon: '🔗' },
+    { label: 'Fulfillment', href: '/dashboard/orders', icon: '📤' },
   ],
   CUSTOMER: [
-    { label: 'My Cart', href: '/marketplace', icon: '🛒' },
-    { label: 'Wishlist', href: '/marketplace', icon: '❤️' },
+    { label: 'My Cart', href: '/cart', icon: '🛒' },
+    { label: 'Wishlist', href: '/wishlist', icon: '❤️' },
+  ],
+  LOGISTICS_PROVIDER: [
+    { label: 'Fleet', href: '/dashboard/hailing', icon: '🚛' },
+    { label: 'Routes', href: '/dashboard/hailing', icon: '🗺️' },
+  ],
+  RESTAURANT: [
+    { label: 'Menu', href: '/dashboard/marketplace', icon: '🍽️' },
+    { label: 'Kitchen Orders', href: '/dashboard/orders', icon: '👨‍🍳' },
+  ],
+  CHEF: [
+    { label: 'My Dishes', href: '/dashboard/marketplace', icon: '🥘' },
+    { label: 'Bookings', href: '/dashboard/orders', icon: '📆' },
+  ],
+  INVESTOR: [
+    { label: 'Portfolio', href: '/investors', icon: '📈' },
+    { label: 'ROI Tracker', href: '/investors', icon: '💹' },
+  ],
+  PHARMACY: [
+    { label: 'Products', href: '/dashboard/marketplace', icon: '💊' },
+    { label: 'Prescriptions', href: '/dashboard/orders', icon: '📝' },
+  ],
+  ADMIN: [
+    { label: 'Admin Panel', href: '/admin/dashboard', icon: '🛡️' },
+    { label: 'Users', href: '/admin/users', icon: '👥' },
   ],
 };
 
@@ -72,14 +116,13 @@ export default function Sidebar({ accountType, onClose, userName, userEmail, onL
       <nav className="flex-1 overflow-y-auto p-4">
         <ul className="space-y-1">
           {navItems.map((item) => {
-            const isActive = pathname === item.href;
             return (
               <li key={item.href}>
                 <Link
                   href={item.href}
                   onClick={onClose}
                   className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors min-h-[44px] ${
-                    isActive
+                    pathname === item.href || pathname.startsWith(item.href + '/')
                       ? 'bg-green-50 text-green-800 border border-green-200'
                       : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
                   }`}
@@ -139,3 +182,4 @@ export default function Sidebar({ accountType, onClose, userName, userEmail, onL
     </aside>
   );
 }
+

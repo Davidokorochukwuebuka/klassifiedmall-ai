@@ -146,3 +146,4 @@ export default function Header({ onMenuToggle, accountType, onAccountChange, use
     </header>
   );
 }
+

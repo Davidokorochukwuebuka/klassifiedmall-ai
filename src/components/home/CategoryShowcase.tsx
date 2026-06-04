@@ -43,7 +43,7 @@ export default function CategoryShowcase() {
               </div>
               <div className="absolute bottom-0 right-0 w-[55%] h-[75%] group-hover:scale-110 transition-transform duration-500">
                 <Image
-                  src="https://bucket-1212rex4i4.s3.us-east-1.amazonaws.com/wp-content/klassifiedmall/Fruits__1_-removebg-preview.png?utm_source=angie-ai"
+                  src="/placeholder-product.svg"
                   alt="Fresh Fruits"
                   fill
                   className="object-contain object-bottom-right"
@@ -76,7 +76,7 @@ export default function CategoryShowcase() {
               </div>
               <div className="absolute bottom-0 right-0 w-[55%] h-[75%] group-hover:scale-110 transition-transform duration-500">
                 <Image
-                  src="https://bucket-1212rex4i4.s3.us-east-1.amazonaws.com/wp-content/klassifiedmall/Protein-min-scaled-1-removebg-preview.png?utm_source=angie-ai"
+                  src="/placeholder-product.svg"
                   alt="Protein"
                   fill
                   className="object-contain object-bottom-right"
@@ -115,7 +115,7 @@ export default function CategoryShowcase() {
               </div>
               <div className="absolute bottom-0 left-0 w-[50%] h-[80%] group-hover:scale-110 transition-transform duration-500">
                 <Image
-                  src="https://bucket-1212rex4i4.s3.us-east-1.amazonaws.com/wp-content/klassifiedmall/soft-drinks-removebg-preview.png?utm_source=angie-ai"
+                  src="/placeholder-product.svg"
                   alt="Packaged Foods"
                   fill
                   className="object-contain object-bottom-left"
@@ -148,7 +148,7 @@ export default function CategoryShowcase() {
               </div>
               <div className="absolute top-4 right-2 w-[45%] h-[70%] group-hover:scale-110 transition-transform duration-500">
                 <Image
-                  src="https://bucket-1212rex4i4.s3.us-east-1.amazonaws.com/wp-content/klassifiedmall/oil-removebg-preview.png?utm_source=angie-ai"
+                  src="/placeholder-product.svg"
                   alt="Soup Ingredients"
                   fill
                   className="object-contain"
@@ -181,7 +181,7 @@ export default function CategoryShowcase() {
               </div>
               <div className="absolute bottom-0 left-2 w-[45%] h-[50%] group-hover:scale-110 transition-transform duration-500">
                 <Image
-                  src="https://bucket-1212rex4i4.s3.us-east-1.amazonaws.com/wp-content/klassifiedmall/Nigerian-and-African-Yam-Tubers-Neogric-2-removebg-preview.png?utm_source=angie-ai"
+                  src="/placeholder-product.svg"
                   alt="Tubers"
                   fill
                   className="object-contain object-bottom"
@@ -211,7 +211,7 @@ export default function CategoryShowcase() {
               </div>
               <div className="absolute bottom-4 right-4 w-[40%] h-[45%] group-hover:scale-110 transition-transform duration-500">
                 <Image
-                  src="https://bucket-1212rex4i4.s3.us-east-1.amazonaws.com/wp-content/klassifiedmall/bag-removebg-review.png?utm_source=angie-ai"
+                  src="/placeholder-product.svg"
                   alt="Food Bundles"
                   fill
                   className="object-contain"
@@ -233,7 +233,7 @@ export default function CategoryShowcase() {
             >
               <div className="absolute inset-0">
                 <Image
-                  src="https://bucket-1212rex4i4.s3.us-east-1.amazonaws.com/wp-content/klassifiedmall/DSC_0003-2-1024x738-removebg-preview.png"
+                  src="/placeholder-product.svg"
                   alt="Fresh Produce"
                   fill
                   className="object-cover opacity-60 group-hover:scale-110 transition-transform duration-500"
@@ -279,7 +279,7 @@ export default function CategoryShowcase() {
               </div>
               <div className="absolute bottom-0 left-4 w-[50%] h-[75%] group-hover:scale-110 transition-transform duration-500">
                 <Image
-                  src="https://bucket-1212rex4i4.s3.us-east-1.amazonaws.com/wp-content/klassifiedmall/logistics%20group.png?utm_source=angie-ai"
+                  src="/placeholder-product.svg"
                   alt="Logistics"
                   fill
                   className="object-contain object-bottom-left"
@@ -312,7 +312,7 @@ export default function CategoryShowcase() {
               </div>
               <div className="absolute top-6 right-2 w-[50%] h-[55%] group-hover:scale-110 transition-transform duration-500">
                 <Image
-                  src="https://bucket-1212rex4i4.s3.us-east-1.amazonaws.com/wp-content/klassifiedmall/logistics%20bike.png"
+                  src="/placeholder-product.svg"
                   alt="Pickup & Drop-off"
                   fill
                   className="object-contain"
@@ -350,7 +350,7 @@ export default function CategoryShowcase() {
             </div>
             <div className="absolute bottom-0 left-0 w-[50%] h-[90%] group-hover:scale-105 transition-transform duration-500">
               <Image
-                src="https://bucket-1212rex4i4.s3.us-east-1.amazonaws.com/wp-content/klassifiedmall/group-five-african-womans-walking-supermarket-with-shopping-carts_627829-592-removebg-preview.png"
+                src="/placeholder-product.svg"
                 alt="Group Buy"
                 fill
                 className="object-contain object-bottom-left"
@@ -364,3 +364,4 @@ export default function CategoryShowcase() {
     </section>
   );
 }
+

@@ -12,7 +12,7 @@ export default function Newsletter() {
         {/* Image */}
         <div className="relative w-full md:w-[45%] h-[250px] sm:h-[300px] shrink-0">
           <Image
-            src="https://bucket-1212rex4i4.s3.us-east-1.amazonaws.com/wp-content/klassifiedmall/5f88a1f694b92.image-removebg-preview.png?utm_source=angie-ai"
+            src="/placeholder-product.svg"
             alt="Newsletter"
             fill
             className="object-contain object-center"
@@ -44,3 +44,4 @@ export default function Newsletter() {
     </section>
   );
 }
+

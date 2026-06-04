@@ -2,11 +2,12 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { LayoutDashboard, Users, CheckSquare, AlertTriangle, DollarSign, Shield, Cloud, Tag, Heart, Truck, Activity } from 'lucide-react';
+import { LayoutDashboard, Users, CheckSquare, AlertTriangle, DollarSign, Shield, Cloud, Tag, Heart, Truck, Activity, TrendingUp } from 'lucide-react';
 
 const nav = [
   { label: 'Dashboard', href: '/admin/dashboard', icon: LayoutDashboard },
   { label: 'Users', href: '/admin/users', icon: Users },
+  { label: 'Analytics', href: '/admin/analytics', icon: TrendingUp },
   { label: 'Approvals', href: '/admin/approvals', icon: CheckSquare },
   { label: 'Disputes', href: '/admin/disputes', icon: AlertTriangle },
   { label: 'Finance', href: '/admin/finance', icon: DollarSign },
@@ -36,3 +37,4 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     </div>
   );
 }
+

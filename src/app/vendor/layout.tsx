@@ -43,3 +43,4 @@ export default function VendorLayout({ children }: { children: React.ReactNode }
     </div>
   );
 }
+

@@ -34,7 +34,7 @@ const gridItems: GridItem[] = [
     id: '3', type: 'category', title: 'Fresh Fruits',
     subtitle: 'Farm fresh daily',
     image: '',
-    imageUrl: 'https://bucket-1212rex4i4.s3.us-east-1.amazonaws.com/wp-content/klassifiedmall/Fruits__1_-removebg-preview.png',
+    imageUrl: '/placeholder-product.svg',
     href: '/categories/fresh-fruits', span: 'tall',
     gradient: 'from-green-400 via-emerald-500 to-teal-600',
   },
@@ -50,7 +50,7 @@ const gridItems: GridItem[] = [
   {
     id: '6', type: 'deal', title: 'Logistics & Delivery', subtitle: 'Bike, Van, Truck — Book now',
     image: '',
-    imageUrl: 'https://bucket-1212rex4i4.s3.us-east-1.amazonaws.com/wp-content/klassifiedmall/logistics%20group.png',
+    imageUrl: '/placeholder-product.svg',
     href: '/hail', span: 'wide',
     gradient: 'from-cyan-500 via-blue-500 to-indigo-600',
   },
@@ -62,7 +62,7 @@ const gridItems: GridItem[] = [
     id: '8', type: 'category', title: 'Protein',
     subtitle: 'Fresh meat & fish',
     image: '',
-    imageUrl: 'https://bucket-1212rex4i4.s3.us-east-1.amazonaws.com/wp-content/klassifiedmall/Protein-min-scaled-1-removebg-preview.png',
+    imageUrl: '/placeholder-product.svg',
     href: '/categories/protein', span: 'normal',
     gradient: 'from-red-400 via-rose-500 to-pink-600',
   },
@@ -74,7 +74,7 @@ const gridItems: GridItem[] = [
     id: '10', type: 'category', title: 'Packaged Foods',
     subtitle: 'Beverages & Drinks',
     image: '',
-    imageUrl: 'https://bucket-1212rex4i4.s3.us-east-1.amazonaws.com/wp-content/klassifiedmall/soft-drinks-removebg-preview.png',
+    imageUrl: '/placeholder-product.svg',
     href: '/categories/packaged-foods', span: 'tall',
     gradient: 'from-blue-400 via-indigo-500 to-purple-600',
   },
@@ -296,3 +296,4 @@ export default function SurfableGrid() {
     </section>
   );
 }
+

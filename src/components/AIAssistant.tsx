@@ -3,12 +3,26 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Send, Sparkles, ShoppingBag, Truck, HelpCircle, MessageCircle } from 'lucide-react';
+import { sendChatMessage } from '../lib/api';
 
 interface Message {
   id: string;
   role: 'assistant' | 'user';
   content: string;
   timestamp: Date;
+  model?: string;
+}
+
+/**
+ * Convert a Bedrock model ID to a short, user-friendly display name.
+ */
+function getModelDisplayName(modelId?: string): string | null {
+  if (!modelId) return null;
+  if (modelId.includes('nova-lite')) return 'Nova Lite';
+  if (modelId.includes('claude-sonnet')) return 'Claude Sonnet';
+  if (modelId.includes('nova-canvas')) return 'Nova Canvas';
+  if (modelId.includes('nova-sonic')) return 'Nova Sonic';
+  return modelId;
 }
 
 const quickActions = [
@@ -79,7 +93,7 @@ export default function AIAssistant() {
     }
   };
 
-  const sendMessage = (text: string) => {
+  const sendMessage = async (text: string) => {
     if (!text.trim()) return;
 
     const userMsg: Message = { id: `u-${Date.now()}`, role: 'user', content: text, timestamp: new Date() };
@@ -87,20 +101,28 @@ export default function AIAssistant() {
     setInput('');
     setIsTyping(true);
 
-    // Simulate AI response
-    setTimeout(() => {
-      const responses: Record<string, string> = {
-        'Help me find products': 'I\'d love to help! 🛍️ What are you looking for? You can browse by category (Food, Electronics, Fashion, Health) or tell me what you need and I\'ll find the best options for you.',
-        'Track my order': 'Sure! 📦 Please share your order ID (e.g., ORD-001) and I\'ll check the status for you. You can also view all your orders at /orders.',
-        'How does KlASSIFIED work?': 'KlASSIFIED is Africa\'s super-app marketplace! 🌍\n\n• **Shop** - Browse thousands of products from verified vendors\n• **Sell** - Set up your store in minutes with AI tools\n• **Deliver** - Book riders for pickup & delivery\n• **Invest** - Back growing businesses\n• **Learn** - Take courses from experts\n• **Give** - Support charity campaigns\n\nWant me to help you get started?',
-        'I need help with my account': 'I\'m here to help! 🤝 What\'s the issue?\n\n1. Login problems\n2. Update profile\n3. Payment issues\n4. Vendor setup\n5. Something else\n\nJust type the number or describe your issue.',
-      };
+    try {
+      const data = await sendChatMessage(text);
+      const reply = data.reply || data.data?.reply || 'Sorry, I couldn\'t process that. Please try again.';
+      const model = data.model || data.data?.model;
 
-      const response = responses[text] || `Thanks for your message! 😊 I understand you're asking about "${text}". Let me help you with that. You can browse our products at /products or explore categories at /categories. Is there anything specific I can assist with?`;
-
-      setMessages((prev) => [...prev, { id: `a-${Date.now()}`, role: 'assistant', content: response, timestamp: new Date() }]);
+      setMessages((prev) => [...prev, {
+        id: `a-${Date.now()}`,
+        role: 'assistant',
+        content: reply,
+        timestamp: new Date(),
+        model,
+      }]);
+    } catch {
+      setMessages((prev) => [...prev, {
+        id: `a-${Date.now()}`,
+        role: 'assistant',
+        content: 'Sorry, I\'m having trouble connecting right now. Please try again in a moment. 🙏',
+        timestamp: new Date(),
+      }]);
+    } finally {
       setIsTyping(false);
-    }, 1500);
+    }
   };
 
   return (
@@ -232,12 +254,19 @@ export default function AIAssistant() {
                   initial={{ opacity: 0, y: 5 }}
                   animate={{ opacity: 1, y: 0 }}
                 >
-                  <div className={`max-w-[80%] px-4 py-2.5 rounded-2xl text-sm leading-relaxed ${
-                    msg.role === 'user'
-                      ? 'bg-gradient-to-r from-primary to-accent text-white rounded-br-md'
-                      : 'bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200 rounded-bl-md'
-                  }`}>
-                    <p className="whitespace-pre-wrap">{msg.content}</p>
+                  <div className="max-w-[80%]">
+                    <div className={`px-4 py-2.5 rounded-2xl text-sm leading-relaxed ${
+                      msg.role === 'user'
+                        ? 'bg-gradient-to-r from-primary to-accent text-white rounded-br-md'
+                        : 'bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200 rounded-bl-md'
+                    }`}>
+                      <p className="whitespace-pre-wrap">{msg.content}</p>
+                    </div>
+                    {msg.role === 'assistant' && getModelDisplayName(msg.model) && (
+                      <p className="mt-1 ml-2 text-[10px] text-gray-400 dark:text-gray-500">
+                        ⚡ {getModelDisplayName(msg.model)}
+                      </p>
+                    )}
                   </div>
                 </motion.div>
               ))}
@@ -301,3 +330,4 @@ export default function AIAssistant() {
     </>
   );
 }
+

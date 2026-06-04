@@ -45,10 +45,32 @@ export default function HailPage() {
   const [pickup, setPickup] = useState('');
   const [dropoff, setDropoff] = useState('');
   const [scheduleDate, setScheduleDate] = useState('');
+  const [matchedDriverData, setMatchedDriverData] = useState<any>(null);
 
-  const handleFindDriver = () => {
+  const handleFindDriver = async () => {
     setStep('searching');
-    setTimeout(() => setStep('matched'), 3000);
+    try {
+      const res = await fetch('/api/hailing/requests', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          pickup,
+          destination: dropoff,
+          vehicleType: selectedVehicle?.id || 'car',
+          mode,
+          scheduledAt: mode === 'schedule' ? scheduleDate : undefined,
+        }),
+      });
+      const data = await res.json();
+      if (data.success && data.data?.driver) {
+        // Store matched driver data for display
+        setMatchedDriverData(data.data);
+      }
+      setTimeout(() => setStep('matched'), 2000);
+    } catch (err) {
+      console.error('Failed to find driver:', err);
+      setTimeout(() => setStep('matched'), 3000);
+    }
   };
 
   return (
@@ -347,17 +369,17 @@ export default function HailPage() {
                     👨
                   </div>
                   <div className="flex-1">
-                    <h3 className="font-bold">Emeka Adeyemi</h3>
-                    <p className="text-xs text-gray-500">Toyota Corolla · LAG-234-XY</p>
+                    <h3 className="font-bold">{matchedDriverData?.driver?.name || 'Emeka Adeyemi'}</h3>
+                    <p className="text-xs text-gray-500">{matchedDriverData?.driver?.vehicleName || 'Toyota Corolla'} · {matchedDriverData?.driver?.plateNumber || 'LAG-234-XY'}</p>
                     <div className="flex items-center gap-2 mt-1">
                       <Star size={12} className="text-warning fill-warning" />
-                      <span className="text-xs font-medium">4.9</span>
-                      <span className="text-xs text-gray-400">• 1,200+ trips</span>
+                      <span className="text-xs font-medium">{matchedDriverData?.driver?.rating || 4.9}</span>
+                      <span className="text-xs text-gray-400">• {matchedDriverData?.driver?.totalTrips || '1,200'}+ trips</span>
                     </div>
                   </div>
                   <div className="text-right">
-                    <p className="text-lg font-heading font-bold text-primary">₦{((selectedVehicle?.basePrice || 1500) * 2).toLocaleString()}</p>
-                    <p className="text-xs text-gray-500 flex items-center gap-1"><Clock size={10} /> {selectedVehicle?.eta || '8 min'}</p>
+                    <p className="text-lg font-heading font-bold text-primary">₦{(matchedDriverData?.estimatedFare || (selectedVehicle?.basePrice || 1500) * 2).toLocaleString()}</p>
+                    <p className="text-xs text-gray-500 flex items-center gap-1"><Clock size={10} /> {matchedDriverData?.driver?.eta || selectedVehicle?.eta || '8 min'}</p>
                   </div>
                 </div>
 
@@ -382,3 +404,4 @@ export default function HailPage() {
     </main>
   );
 }
+

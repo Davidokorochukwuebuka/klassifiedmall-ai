@@ -13,7 +13,7 @@ const heroSlides = [
     ctaLink: '/auth/signup',
     gradient: 'from-[#0f172a]/90 via-[#1a2e1a]/80 to-[#0c1929]/70',
     accent: '#61CE70',
-    image: 'https://bucket-1212rex4i4.s3.us-east-1.amazonaws.com/wp-content/klassifiedmall/Fruits__1_-removebg-preview.png',
+    image: '/placeholder-product.svg',
   },
   {
     headline: 'Trust Should Be Built Into The System.',
@@ -22,7 +22,7 @@ const heroSlides = [
     ctaLink: '/auth/signup?type=vendor',
     gradient: 'from-[#1a0533]/90 via-[#0f172a]/80 to-[#0c2940]/70',
     accent: '#6EC1E4',
-    image: 'https://bucket-1212rex4i4.s3.us-east-1.amazonaws.com/wp-content/klassifiedmall/Protein-min-scaled-1-removebg-preview.png',
+    image: '/placeholder-product.svg',
   },
   {
     headline: 'Your Products Deserve a Bigger Market.',
@@ -31,7 +31,7 @@ const heroSlides = [
     ctaLink: '/auth/signup?type=vendor',
     gradient: 'from-[#2d1b00]/90 via-[#1a0f00]/80 to-[#0f172a]/70',
     accent: '#D4A017',
-    image: 'https://bucket-1212rex4i4.s3.us-east-1.amazonaws.com/wp-content/klassifiedmall/bag-removebg-review.png',
+    image: '/placeholder-product.svg',
   },
   {
     headline: 'Know Where Your Food Comes From.',
@@ -40,7 +40,7 @@ const heroSlides = [
     ctaLink: '/products',
     gradient: 'from-[#0c2940]/90 via-[#0f172a]/80 to-[#1a0533]/70',
     accent: '#EC4899',
-    image: 'https://bucket-1212rex4i4.s3.us-east-1.amazonaws.com/wp-content/klassifiedmall/soft-drinks-removebg-preview.png',
+    image: '/placeholder-product.svg',
   },
   {
     headline: 'Good Products Need Better Systems.',
@@ -49,7 +49,7 @@ const heroSlides = [
     ctaLink: '/about',
     gradient: 'from-[#0f172a]/90 via-[#1a2e1a]/80 to-[#2d1b00]/70',
     accent: '#61CE70',
-    image: 'https://bucket-1212rex4i4.s3.us-east-1.amazonaws.com/wp-content/klassifiedmall/logistics%20group.png',
+    image: '/placeholder-product.svg',
   },
   {
     headline: 'Give Back. Build Community.',
@@ -58,7 +58,7 @@ const heroSlides = [
     ctaLink: '/charity',
     gradient: 'from-[#1a0533]/90 via-[#2d0a1a]/80 to-[#0f172a]/70',
     accent: '#EC4899',
-    image: 'https://bucket-1212rex4i4.s3.us-east-1.amazonaws.com/wp-content/klassifiedmall/group-five-african-womans-walking-supermarket-with-shopping-carts_627829-592-removebg-preview.png',
+    image: '/placeholder-product.svg',
   },
   {
     headline: 'Invest in What Grows.',
@@ -67,7 +67,7 @@ const heroSlides = [
     ctaLink: '/investors',
     gradient: 'from-[#0c2940]/90 via-[#0f172a]/80 to-[#1a2e1a]/70',
     accent: '#6EC1E4',
-    image: 'https://bucket-1212rex4i4.s3.us-east-1.amazonaws.com/wp-content/klassifiedmall/oil-removebg-preview.png',
+    image: '/placeholder-product.svg',
   },
 ];
 
@@ -234,3 +234,4 @@ export default function Hero() {
     </section>
   );
 }
+

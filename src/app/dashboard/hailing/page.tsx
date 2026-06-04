@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { getDrivers, bookDriver } from '@/lib/api';
+import { useAuth } from '@/lib/AuthContext';
 
 interface Driver {
   id: string;
@@ -19,6 +20,7 @@ interface Driver {
 }
 
 export default function HailingPage() {
+  const { isAuthenticated, isLoading } = useAuth();
   const [pickup, setPickup] = useState('');
   const [destination, setDestination] = useState('');
   const [cargoType, setCargoType] = useState('');
@@ -31,6 +33,7 @@ export default function HailingPage() {
 
   const handleSearch = async () => {
     if (!pickup || !destination) return;
+    if (!isAuthenticated) return;
     setLoading(true);
     try {
       const res = await getDrivers({ location: pickup });
@@ -266,3 +269,4 @@ export default function HailingPage() {
     </div>
   );
 }
+

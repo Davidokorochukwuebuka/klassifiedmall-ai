@@ -1,59 +1,46 @@
-const BASE_URL = process.env.NEXT_PUBLIC_API_URL || '/api';
+/**
+ * API client library - Direct connection to AWS API Gateway.
+ * All calls go to the real Lambda backend. No mocks, no local fallback.
+ */
+import { getAccessToken } from './auth';
+import { AuthenticationError } from './errors';
 
-function getAuthToken(): string | null {
-  if (typeof window === 'undefined') return null;
-  return localStorage.getItem('kl_token');
-}
+const API_URL = 'https://dx45lag82l.execute-api.us-east-1.amazonaws.com/dev/api/v1';
 
-async function fetchAPI(endpoint: string, options?: RequestInit & { skipAuth?: boolean }) {
-  const { skipAuth, ...fetchOptions } = options || {};
-  const url = `${BASE_URL}${endpoint}`;
+async function fetchAPI(endpoint: string, options?: RequestInit) {
+  const token = await getAccessToken();
+
+  // If no token and not a public endpoint, try using the stored ID token directly
+  // (it may still be valid even if getAccessToken thinks it's expired due to clock skew)
+  let authToken = token;
+  if (!authToken && typeof window !== 'undefined') {
+    authToken = localStorage.getItem('kl_id_token');
+  }
+
   const headers: Record<string, string> = {
     'Content-Type': 'application/json',
-    ...(fetchOptions?.headers as Record<string, string>),
+    ...(options?.headers as Record<string, string>),
   };
 
-  if (!skipAuth) {
-    const token = getAuthToken();
-    if (token) headers['Authorization'] = `Bearer ${token}`;
+  if (authToken) {
+    headers['Authorization'] = `Bearer ${authToken}`;
   }
 
-  const res = await fetch(url, { ...fetchOptions, headers });
-
-  if (res.status === 401) {
-    localStorage.removeItem('kl_token');
-    localStorage.removeItem('kl_user');
-    if (typeof window !== 'undefined') window.location.href = '/login';
-    throw new Error('Session expired');
-  }
+  const url = `${API_URL}${endpoint}`;
+  const res = await fetch(url, {
+    ...options,
+    headers,
+  });
 
   const data = await res.json();
-  if (!res.ok) throw new Error(data.error || 'API request failed');
+  if (!res.ok) {
+    // If API returns 401 Unauthorized, the token is truly invalid
+    if (res.status === 401) {
+      throw new AuthenticationError('Session expired. Please sign in again.');
+    }
+    throw new Error(data.error || `API request failed: ${res.status}`);
+  }
   return data;
-}
-
-// Auth
-export async function login(email: string, password: string) {
-  return fetchAPI('/auth/login', {
-    method: 'POST',
-    body: JSON.stringify({ email, password }),
-    skipAuth: true,
-  });
-}
-
-export async function register(data: {
-  email: string;
-  password: string;
-  name: string;
-  accountType?: string;
-  phone?: string;
-  location?: string;
-}) {
-  return fetchAPI('/auth/register', {
-    method: 'POST',
-    body: JSON.stringify(data),
-    skipAuth: true,
-  });
 }
 
 // Products
@@ -69,7 +56,11 @@ export async function getProducts(filters?: {
   if (filters?.page) params.set('page', String(filters.page));
   if (filters?.limit) params.set('limit', String(filters.limit));
   const query = params.toString() ? `?${params.toString()}` : '';
-  return fetchAPI(`/products${query}`);
+  return fetchAPI(`/marketplace/products${query}`);
+}
+
+export async function getProduct(productId: string) {
+  return fetchAPI(`/marketplace/products/${productId}`);
 }
 
 export async function createProduct(data: {
@@ -80,7 +71,17 @@ export async function createProduct(data: {
   description?: string;
   location?: string;
 }) {
-  return fetchAPI('/products', { method: 'POST', body: JSON.stringify(data) });
+  return fetchAPI('/marketplace/products', {
+    method: 'POST',
+    body: JSON.stringify(data),
+  });
+}
+
+export async function updateProduct(productId: string, data: Record<string, any>) {
+  return fetchAPI(`/marketplace/products/${productId}`, {
+    method: 'PUT',
+    body: JSON.stringify(data),
+  });
 }
 
 // Orders
@@ -92,17 +93,24 @@ export async function getOrders(filters?: { status?: string; search?: string }) 
   return fetchAPI(`/orders${query}`);
 }
 
+export async function getOrder(orderId: string) {
+  return fetchAPI(`/orders/${orderId}`);
+}
+
 export async function createOrder(data: {
   items: Array<{ productId: string; name: string; price: number; quantity: number }>;
   shippingAddress?: string;
   paymentMethod?: string;
 }) {
-  return fetchAPI('/orders', { method: 'POST', body: JSON.stringify(data) });
+  return fetchAPI('/orders', {
+    method: 'POST',
+    body: JSON.stringify(data),
+  });
 }
 
 // Cart
 export async function getCart() {
-  return fetchAPI('/cart');
+  return fetchAPI('/orders/cart');
 }
 
 export async function addToCart(product: {
@@ -114,14 +122,33 @@ export async function addToCart(product: {
   seller?: string;
   image?: string;
 }) {
-  return fetchAPI('/cart', { method: 'POST', body: JSON.stringify(product) });
+  return fetchAPI('/orders/cart', {
+    method: 'POST',
+    body: JSON.stringify(product),
+  });
+}
+
+export async function updateCartItem(productId: string, quantity: number) {
+  return fetchAPI('/orders/cart', {
+    method: 'PUT',
+    body: JSON.stringify({ productId, quantity }),
+  });
 }
 
 export async function removeFromCart(itemId?: string, productId?: string) {
   const params = new URLSearchParams();
   if (itemId) params.set('itemId', itemId);
   if (productId) params.set('productId', productId);
-  return fetchAPI(`/cart?${params.toString()}`, { method: 'DELETE' });
+  return fetchAPI(`/orders/cart?${params.toString()}`, {
+    method: 'DELETE',
+  });
+}
+
+export async function checkout(data: { shippingAddress: string; paymentMethod: string }) {
+  return fetchAPI('/orders/checkout', {
+    method: 'POST',
+    body: JSON.stringify(data),
+  });
 }
 
 // Hailing / Drivers
@@ -144,7 +171,10 @@ export async function bookDriver(data: {
   cargoType?: string;
   weight?: string;
 }) {
-  return fetchAPI('/hailing/requests', { method: 'POST', body: JSON.stringify(data) });
+  return fetchAPI('/hailing/requests', {
+    method: 'POST',
+    body: JSON.stringify(data),
+  });
 }
 
 // Spaces
@@ -162,7 +192,27 @@ export async function bookSpace(data: {
   endDate: string;
   quantity?: number;
 }) {
-  return fetchAPI('/spaces', { method: 'POST', body: JSON.stringify(data) });
+  return fetchAPI('/spaces', {
+    method: 'POST',
+    body: JSON.stringify(data),
+  });
+}
+
+// Payments & Wallet
+export async function getWallet() {
+  return fetchAPI('/payments/wallets');
+}
+
+export async function initializePayment(data: {
+  orderId: string;
+  amount: number;
+  email: string;
+  paymentMethod?: string;
+}) {
+  return fetchAPI('/payments/paystack', {
+    method: 'POST',
+    body: JSON.stringify(data),
+  });
 }
 
 // Notifications
@@ -170,12 +220,97 @@ export async function getNotifications() {
   return fetchAPI('/notifications');
 }
 
+export async function markNotificationRead(notificationId: string) {
+  return fetchAPI(`/notifications/${notificationId}`, {
+    method: 'PUT',
+    body: JSON.stringify({ read: true }),
+  });
+}
+
 // Community
 export async function getGroups() {
   return fetchAPI('/community/groups');
 }
 
+export async function getMessages(conversationId: string) {
+  return fetchAPI(`/community/messages?conversationId=${conversationId}`);
+}
+
 // AI Chat
 export async function sendChatMessage(message: string) {
-  return fetchAPI('/ai/chat', { method: 'POST', body: JSON.stringify({ message }) });
+  return fetchAPI('/ai/chat', {
+    method: 'POST',
+    body: JSON.stringify({ message }),
+  });
+}
+
+// Negotiations
+export async function getNegotiations() {
+  return fetchAPI('/negotiations');
+}
+
+export async function createNegotiation(data: {
+  productId: string;
+  vendorId: string;
+  proposedPrice: number;
+  message?: string;
+}) {
+  return fetchAPI('/negotiations', {
+    method: 'POST',
+    body: JSON.stringify(data),
+  });
+}
+
+// Search
+export async function searchProducts(query: string, filters?: Record<string, string>) {
+  const params = new URLSearchParams({ q: query, ...filters });
+  return fetchAPI(`/marketplace/search?${params.toString()}`);
+}
+
+// AI Services
+export async function generateDescription(name: string, category: string, details?: Record<string, any>) {
+  return fetchAPI('/ai/generate-description', {
+    method: 'POST',
+    body: JSON.stringify({ name, category, details }),
+  });
+}
+
+export async function enhanceImage(imageKey: string, background?: 'white' | 'rustic' | 'studio') {
+  return fetchAPI('/ai/enhance-image', {
+    method: 'POST',
+    body: JSON.stringify({ imageKey, background }),
+  });
+}
+
+export async function processVoice(audio?: string, text?: string, context?: string) {
+  return fetchAPI('/ai/voice', {
+    method: 'POST',
+    body: JSON.stringify({ audio, text, context }),
+  });
+}
+
+export async function moderateContent(
+  title: string,
+  description: string,
+  category: string,
+  imageKeys?: string[]
+) {
+  return fetchAPI('/ai/moderate', {
+    method: 'POST',
+    body: JSON.stringify({ title, description, category, imageKeys }),
+  });
+}
+
+export async function aiNegotiate(
+  negotiationId: string,
+  currentPrice: number,
+  proposedPrice: number,
+  quantity: number,
+  productCategory: string,
+  buyerHistory?: Record<string, any>
+) {
+  return fetchAPI('/ai/negotiate', {
+    method: 'POST',
+    body: JSON.stringify({ negotiationId, currentPrice, proposedPrice, quantity, productCategory, buyerHistory }),
+  });
 }

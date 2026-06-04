@@ -12,16 +12,20 @@ interface AppShellProps {
 }
 
 export default function AppShell({ children }: AppShellProps) {
-  const { user, isAuthenticated, isLoading, logout, updateAccountType } = useAuth();
+  const { user, isAuthenticated, isLoading, sessionExpired, logout, updateAccountType } = useAuth();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const router = useRouter();
 
   const accountType = user?.accountType || 'FARMER';
 
-  // Redirect to login if not authenticated
-  if (!isLoading && !isAuthenticated) {
-    router.push('/login');
-    return null;
+  // Only redirect if user was NEVER authenticated (no stored user at all and no user in context)
+  if (!isLoading && !isAuthenticated && !sessionExpired && !user) {
+    // Check localStorage directly as a safety net
+    const storedUser = typeof window !== 'undefined' ? localStorage.getItem('kl_user') : null;
+    if (!storedUser) {
+      router.push('/auth/signin');
+      return null;
+    }
   }
 
   if (isLoading) {
@@ -37,6 +41,20 @@ export default function AppShell({ children }: AppShellProps) {
 
   return (
     <div className="min-h-screen bg-gray-50">
+      {/* Session expired banner */}
+      {sessionExpired && (
+        <div className="fixed top-0 left-0 right-0 z-50 bg-amber-50 border-b border-amber-200 px-4 py-3 flex items-center justify-between">
+          <p className="text-sm text-amber-800">
+            Your session has expired. Please sign in again to continue.
+          </p>
+          <button
+            onClick={() => router.push('/auth/signin')}
+            className="px-4 py-1.5 text-sm font-medium bg-amber-600 text-white rounded-lg hover:bg-amber-700 transition-colors"
+          >
+            Sign In
+          </button>
+        </div>
+      )}
       {/* Mobile overlay */}
       {mobileMenuOpen && (
         <div
@@ -74,3 +92,4 @@ export default function AppShell({ children }: AppShellProps) {
     </div>
   );
 }
+
